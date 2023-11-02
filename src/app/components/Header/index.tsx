@@ -3,7 +3,7 @@
 import { Chewy } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const chewy = Chewy({
   weight: '400',
@@ -27,6 +27,18 @@ export default function Header() {
   const toggleMobileNavVisible = () =>
     setMobileNavVisible((prevVisible) => !prevVisible);
 
+  useEffect(() => {
+    const closeNavBarWhenLinkClicked: EventListener = (e) => {
+      if (e.target instanceof Element) {
+        if (e.target.closest('a')) {
+          setMobileNavVisible(false);
+        }
+      }
+    };
+
+    document.addEventListener('click', closeNavBarWhenLinkClicked);
+  }, []);
+
   return (
     <>
       <header className="shadow-lg bg-black text-white h-16">
@@ -43,7 +55,7 @@ export default function Header() {
               <h1 className={chewy.className}>Languages</h1>
             </Link>
             {/* PC Navbar */}
-            <nav className="py-2 gap-x-2 hidden md:flex">
+            <nav className="py-2 gap-x-6 hidden md:flex">
               {navItems.map((navItem) => (
                 <Link key={navItem.label} href={navItem.href}>
                   {navItem.label}
@@ -63,7 +75,7 @@ export default function Header() {
       </header>
       {/* Mobile Navbar */}
       <nav
-        className={`md:hidden top-16 w-screen absolute ${
+        className={`md:hidden top-16 w-screen absolute z-50 ${
           mobileNavVisible ? 'scale-y-100' : 'scale-y-0'
         } origin-top transition`}
       >
