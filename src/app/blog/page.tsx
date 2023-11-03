@@ -1,5 +1,5 @@
-import BlogList from './components/BlogList';
+import Blog from './components/Blog';
 
-export default function Blog() {
-  return <BlogList />;
+export default function BlogPage() {
+  return <Blog />;
 }

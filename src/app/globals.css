@@ -1,3 +1,202 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Disable all Tailwind effects */
+
+.disable-tailwind p {
+  display: block !important;
+  margin-block-start: 1em !important;
+  margin-block-end: 1em !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+  margin: 1em 0 !important;
+  /* Add any other custom styles you want */
+}
+
+.disable-tailwind blockquote {
+  border-left: 4px solid #666 !important;
+  padding-left: 10px !important;
+  font-style: italic !important;
+  /* Add any other custom styles you want */
+}
+
+.disable-tailwind ul {
+  /* description */
+  display: block !important;
+  margin-block-start: 1em !important;
+  margin-block-end: 1em !important;
+  padding-inline-start: 40px !important;
+  list-style-type: disc !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+  counter-reset: list-item !important;
+  list-style-image: none !important;
+  list-style-position: outside !important;
+  margin: 1em 0 !important;
+  padding: 0 0 0 30pt !important;
+}
+
+.disable-tailwind ol {
+  /* description */
+  display: block !important;
+  margin-block-start: 1em !important;
+  margin-block-end: 1em !important;
+  padding-inline-start: 40px !important;
+  list-style-type: decimal !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+  counter-reset: list-item !important;
+  list-style-image: none !important;
+  list-style-position: outside !important;
+  margin: 1em 0 !important;
+  padding: 0 0 0 30pt !important;
+}
+
+.disable-tailwind b {
+  font-weight: bolder !important;
+}
+
+.disable-tailwind i {
+  font-style: italic !important;
+}
+
+.disable-tailwind h1 {
+  display: block !important;
+  font-weight: bold !important;
+  font-size: 2em !important;
+  margin-block-start: 0.67em !important;
+  margin-block-end: 0.67em !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+}
+.disable-tailwind h2 {
+  display: block !important;
+  font-weight: bold !important;
+  font-size: 1.5em !important;
+  margin-block-start: 0.83em !important;
+  margin-block-end: 0.83em !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+}
+.disable-tailwind h3 {
+  display: block !important;
+  font-weight: bold !important;
+  font-size: 1.17em !important;
+  margin-block-start: 1em !important;
+  margin-block-end: 1em !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+}
+.disable-tailwind h6 {
+  display: block !important;
+  font-weight: bold !important;
+  font-size: 0.67em !important;
+  margin-block-start: 2.33em !important;
+  margin-block-end: 2.33em !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+}
+.disable-tailwind table {
+  display: table !important;
+  box-sizing: border-box !important;
+  border-spacing: 2px !important;
+  border-collapse: separate !important;
+  text-indent: initial !important;
+  border-color: gray !important;
+}
+.disable-tailwind tr {
+  display: table-row !important;
+  border-color: inherit !important;
+  vertical-align: inherit !important;
+}
+.disable-tailwind td {
+  display: table-cell !important;
+  padding: 1px !important;
+  vertical-align: inherit !important;
+}
+.disable-tailwind u {
+  text-decoration: underline !important;
+}
+.disable-tailwind a {
+  color: #0000ee !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+.disable-tailwind a:active {
+  color: #ff0000 !important;
+}
+.disable-tailwind a:visited {
+  color: #551a8b !important;
+}
+.disable-tailwind pre {
+  border-radius: 0.5rem !important;
+  padding: 1rem !important;
+  font-family: monospace !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  overflow-x: auto !important;
+  /* Add any other custom styles you want */
+}
+
+.disable-tailwind code {
+  margin: 0;
+  white-space: pre-wrap;
+}
+.content-custom table td,
+table th,
+table tr {
+  background-color: transparent !important;
+  border-left: 4px solid #e6e9ec !important;
+  border-bottom: 4px solid #e6e9ec !important;
+  border-right: 4px solid #e6e9ec !important;
+  border-top: 4px solid #e6e9ec !important;
+  font-size: inherit !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  padding: 5px !important;
+  font-weight: 600 !important;
+}
+
+.content-custom tr {
+  background-color: transparent !important;
+  border-left: 4px solid #e6e9ec !important;
+  border-bottom: 4px solid #e6e9ec !important;
+  font-size: inherit !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  padding: 5px !important;
+  font-weight: 600 !important;
+}
+.content-custom .alignleft {
+  float: left;
+  margin: 0 1em 0 0;
+}
+.content-custom .ytp-cued-thumbnail-overlay-image {
+  background-size: cover;
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.content-custom .html5-video-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  outline: 0;
+  font-family: 'YouTube Noto', Roboto, Arial, Helvetica, sans-serif;
+  color: #eee;
+  text-align: left;
+  direction: ltr;
+  font-size: 11px;
+  line-height: 1.3;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  touch-action: manipulation;
+  -ms-high-contrast-adjust: none;
+}
