@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Gabarito } from 'next/font/google';
 import './globals.css';
 import Header from './components/Header';
+import Footer from './components/Footer';
 
 const gabarito = Gabarito({ subsets: ['latin'] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body className={gabarito.className}>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
