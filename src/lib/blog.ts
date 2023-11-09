@@ -13,3 +13,7 @@ export const convertDateFormatForPost = (datetimeStr: string) => {
     .toString()
     .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 };
+
+export const removeHtmlTags = (html: string) => {
+  return html.replace(/<[^>]*>/g, '');
+};

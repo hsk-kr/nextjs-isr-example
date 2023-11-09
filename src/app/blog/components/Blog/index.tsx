@@ -14,12 +14,12 @@ interface BlogProps {
 }
 
 export default function Blog({ posts }: BlogProps) {
-  const [keyword, setKeyword] = useState('');
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   let page = Number(searchParams.get('page') ?? 1);
   page = Number.isNaN(page) ? 1 : page;
+  const keyword = searchParams.get('keyword') ?? '';
 
   const filteredPostsByKeyword = useMemo(() => {
     if (!keyword) return posts;
@@ -48,8 +48,7 @@ export default function Blog({ posts }: BlogProps) {
   const handleSearch: ComponentProps<typeof SearchInput>['onSearch'] = (
     keyword
   ) => {
-    router.replace(`${pathname}?page=1`);
-    setKeyword(keyword);
+    router.replace(`${pathname}?page=1&keyword=${keyword}`);
   };
 
   return (

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface PagingProps {
   activePage: number;
@@ -8,10 +9,19 @@ interface PagingProps {
 export const PAGE_CNT = 5;
 
 export default function Paging({ activePage, totalElements }: PagingProps) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const startPage = Math.floor((activePage - 1) / PAGE_CNT) * PAGE_CNT + 1;
   const lastPage = Math.ceil(totalElements / PAGE_CNT);
   const lastPageOfThisRange = startPage + PAGE_CNT;
   const pages = [];
+
+  const generateHref = (page: number | string) => {
+    const urlSearchParams = new URLSearchParams(searchParams);
+    urlSearchParams.set('page', page.toString());
+
+    return `${pathname}?${urlSearchParams.toString()}`;
+  };
 
   const generateLinkClass = (active = false) => {
     return `${
@@ -23,7 +33,7 @@ export default function Paging({ activePage, totalElements }: PagingProps) {
     pages.push(
       <Link
         key="prev"
-        href={`/blog?page=${startPage - 1}`}
+        href={generateHref(startPage - 1)}
         className={generateLinkClass()}
       >
         {'<'}
@@ -39,7 +49,7 @@ export default function Paging({ activePage, totalElements }: PagingProps) {
     pages.push(
       <Link
         key={i}
-        href={`/blog?page=${i}`}
+        href={generateHref(i)}
         className={generateLinkClass(i === activePage)}
       >
         {i}
@@ -51,7 +61,7 @@ export default function Paging({ activePage, totalElements }: PagingProps) {
     pages.push(
       <Link
         key="next"
-        href={`/blog?page=${lastPageOfThisRange}`}
+        href={generateHref(lastPageOfThisRange)}
         className={generateLinkClass()}
       >
         {'>'}
