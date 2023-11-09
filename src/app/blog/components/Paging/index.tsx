@@ -5,7 +5,7 @@ interface PagingProps {
   totalElements: number;
 }
 
-const PAGE_CNT = 5;
+export const PAGE_CNT = 5;
 
 export default function Paging({ activePage, totalElements }: PagingProps) {
   const startPage = Math.floor((activePage - 1) / PAGE_CNT) * PAGE_CNT + 1;

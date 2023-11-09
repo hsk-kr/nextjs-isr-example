@@ -75,7 +75,7 @@ export default function Header() {
       </header>
       {/* Mobile Navbar */}
       <nav
-        className={`md:hidden top-16 w-screen absolute z-50 ${
+        className={`md:hidden top-16 w-screen absolute z-20 ${
           mobileNavVisible ? 'scale-y-100' : 'scale-y-0'
         } origin-top transition`}
       >

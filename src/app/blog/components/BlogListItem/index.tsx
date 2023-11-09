@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 interface BlogListItemProps {
-  id: number;
+  id: string;
   title: string;
   content: string;
   estimatedTime: string;
