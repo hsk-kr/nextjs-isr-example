@@ -4,7 +4,11 @@ import './globals.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-const gabarito = Gabarito({ subsets: ['latin'] });
+const gabarito = Gabarito({
+  subsets: ['latin'],
+  display: 'swap',
+  adjustFontFallback: false,
+});
 
 export const metadata: Metadata = {
   title: 'Languages',
