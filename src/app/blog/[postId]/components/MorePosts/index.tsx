@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 interface MorePostsProps {
   posts: {
-    id: number;
+    id: string;
     title: string;
     createdAt: string;
   }[];
