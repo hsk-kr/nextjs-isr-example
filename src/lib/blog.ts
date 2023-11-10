@@ -6,9 +6,7 @@ export const estimateReadingTime = (text: string) => {
   return `${Math.ceil(estimatedMins)} mins`;
 };
 
-export const convertDateFormatForPost = (datetimeStr: string) => {
-  const date = new Date(datetimeStr);
-
+export const convertDateFormatForPost = (date: Date) => {
   return `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()
     .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;

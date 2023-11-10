@@ -28,3 +28,7 @@ export const connectDB = async () => {
     return await createConnection();
   }
 };
+
+export const getDB = async () => {
+  return (await connectDB()).db(process.env.DB_NAME);
+};

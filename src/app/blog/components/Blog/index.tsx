@@ -6,11 +6,10 @@ import Paging, { PAGE_CNT } from '../Paging';
 import SearchInput from '../SearchInput';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { convertDateFormatForPost, estimateReadingTime } from '@/lib/blog';
-import { DocumentWithStringId } from '@/types/common';
-import { ComponentProps, Suspense, useEffect, useMemo, useState } from 'react';
+import { ComponentProps, useMemo } from 'react';
 
 interface BlogProps {
-  posts: DocumentWithStringId<Post>[];
+  posts: Post[];
 }
 
 export default function Blog({ posts }: BlogProps) {
@@ -61,8 +60,8 @@ export default function Blog({ posts }: BlogProps) {
       <div className="flex flex-col gap-y-4 pt-6">
         {filteredPosts.map((post) => (
           <BlogListItem
-            key={post.id}
-            id={post.id}
+            key={post._id}
+            id={post._id}
             title={post.title}
             content={post.content}
             createdAt={convertDateFormatForPost(post.createdAt)}

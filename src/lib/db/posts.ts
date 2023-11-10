@@ -1,34 +1,57 @@
 import { Post } from '@/types/blog';
-import { connectDB } from './mongodb';
+import { getDB } from './mongodb';
 import { removeHtmlTags } from '../blog';
+import { ObjectId } from 'mongodb';
 
-export const getPosts = async () => {
-  const connect = await connectDB();
-  return await connect
-    .db(process.env.DB_NAME)
+export const getPosts = async (): Promise<Post[]> => {
+  const db = await getDB();
+  return await db
     .collection('posts')
-    .find<Post>(
-      {},
+    .aggregate<Post>([
       {
-        projection: {
+        $project: {
+          _id: {
+            $toString: '$_id',
+          },
           title: 1,
-          createdAt: 1,
+          createdAt: {
+            $dateFromString: {
+              dateString: '$createdAt',
+            },
+          },
           content: {
             $substr: ['$content', 0, 200],
           },
         },
-      }
-    )
-    .map((post) => {
-      const { _id, content, ...rest } = post;
-
-      const newPost = {
-        ...rest,
-        content: removeHtmlTags(content),
-        id: _id.toString(),
-      };
-
-      return newPost;
-    })
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ])
     .toArray();
+};
+
+export const getPost = async (id: string): Promise<Post | null> => {
+  const db = await getDB();
+  return await db.collection('posts').findOne<Post>(
+    {
+      _id: new ObjectId(id),
+    },
+    {
+      projection: {
+        _id: {
+          $toString: '$_id',
+        },
+        title: 1,
+        content: 1,
+        createdAt: {
+          $dateFromString: {
+            dateString: '$createdAt',
+          },
+        },
+      },
+    }
+  );
 };
