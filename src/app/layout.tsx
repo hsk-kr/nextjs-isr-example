@@ -3,6 +3,7 @@ import { Gabarito } from 'next/font/google';
 import './globals.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import { generateMetaTitleAndDesc } from '@/lib/seo';
 
 const gabarito = Gabarito({
   subsets: ['latin'],
@@ -10,9 +11,19 @@ const gabarito = Gabarito({
   adjustFontFallback: false,
 });
 
+const title = {
+  default: 'Home | Languages',
+  template: '%s | Languages',
+};
+
+const description =
+  'Time to learn languages. Expand your world and talk to the world';
+
 export const metadata: Metadata = {
-  title: 'Languages',
-  description: 'Time to learn languages',
+  ...generateMetaTitleAndDesc(title, description),
+  metadataBase: new URL(process.env.DOMAIN ?? ''),
+  keywords: ['blog', 'language', 'motivation'],
+  creator: 'hsk.coder@gmail.com',
 };
 
 export default function RootLayout({

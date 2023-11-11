@@ -3,10 +3,26 @@ import MorePosts from './components/MorePosts';
 import { getMorePosts, getPost, getPostIds } from '@/lib/db/posts';
 import { notFound } from 'next/navigation';
 import { convertDateFormatForPost } from '@/lib/blog';
+import { generateMetaTitleAndDesc } from '@/lib/seo';
 
 interface PostPageProps {
   params: {
     postId: string;
+  };
+}
+
+export async function generateMetadata({ params: { postId } }: PostPageProps) {
+  const post = await getPost(postId);
+
+  if (!post) {
+    return {
+      title: 'Not Found',
+      description: 'The page you are looking for does not exist.',
+    };
+  }
+
+  return {
+    ...generateMetaTitleAndDesc(post.title, post.content.substring(0, 150)),
   };
 }
 
