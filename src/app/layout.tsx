@@ -21,7 +21,7 @@ const description =
 
 export const metadata: Metadata = {
   ...generateMetaTitleAndDesc(title, description),
-  metadataBase: new URL(process.env.DOMAIN ?? ''),
+  metadataBase: new URL(process.env.BASE_URL ?? ''),
   keywords: ['blog', 'language', 'motivation'],
   creator: 'hsk.coder@gmail.com',
 };
