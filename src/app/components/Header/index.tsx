@@ -41,7 +41,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="shadow-lg bg-black text-white h-16">
+      <header className="shadow-lg bg-black text-white h-16 fixed w-screen z-10">
         <div className="px-4 max-w-4xl flex items-center py-2 h-full justify-between mx-auto">
           <div className="flex gap-x-2">
             <Link href="/" className="flex items-center gap-x-1 mr-4">
