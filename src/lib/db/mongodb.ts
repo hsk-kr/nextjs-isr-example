@@ -18,15 +18,15 @@ export const connectDB = async () => {
     return await client.connect();
   };
 
-  if (process.env.NODE_ENV === 'development') {
-    if (global.mongoConn) {
-      return global.mongoConn;
-    }
-    global.mongoConn = await createConnection();
+  // if (process.env.NODE_ENV === 'development') {
+  if (global.mongoConn) {
     return global.mongoConn;
-  } else {
-    return await createConnection();
   }
+  global.mongoConn = await createConnection();
+  return global.mongoConn;
+  // } else {
+  //   return await createConnection();
+  // }
 };
 
 export const getDB = async () => {
