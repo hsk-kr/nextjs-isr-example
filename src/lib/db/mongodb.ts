@@ -30,14 +30,14 @@ export const connectDB = async () => {
   return await createConnection();
 };
 
-export const executeDB = async (
-  cb: (db: Db) => void,
+export const executeDB = async <R extends unknown>(
+  cb: (db: Db) => R | Promise<R>,
   options: {
     useCache: boolean;
   } = {
     useCache: false,
   }
-) => {
+): Promise<R> => {
   let conn: MongoClient;
   if (options.useCache) {
     if (!global.mongoConn) {
@@ -55,9 +55,11 @@ export const executeDB = async (
   }
 
   const db = conn.db(process.env.DB_NAME);
-  await cb(db);
+  const cbResult: R = await cb(db);
 
   if (!options.useCache) {
     conn.close();
   }
+
+  return cbResult;
 };
