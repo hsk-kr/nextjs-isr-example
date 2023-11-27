@@ -1,47 +1,54 @@
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient, ReadConcern } from 'mongodb';
 
 declare global {
-  var mongoConn: MongoClient;
+  var mongoConn: MongoClient | undefined;
 }
-
-const options = {};
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Set Mongo URI to .env');
 }
 
-export const connectDB = async () => {
+const createConnection = async () => {
   const uri = process.env.MONGODB_URI ?? '';
+  const client = new MongoClient(uri, {});
+  return await client.connect();
+};
 
-  const createConnection = async () => {
-    const client = new MongoClient(uri, options);
-    return await client.connect();
-  };
+export const connectDB = async () => {
+  return await createConnection();
+};
 
+export const executeDB = async (
+  cb: (db: Db) => void,
+  options: {
+    useCache: boolean;
+  } = {
+    useCache: false,
+  }
+) => {
   const updateGlobalMongoConn = async () => {
     if (global.mongoConn) {
-      try {
-        await global.mongoConn.close();
-      } catch {}
+      global.mongoConn.close();
     }
     global.mongoConn = await createConnection();
-    global.mongoConn.on('connectionCheckOutFailed', updateGlobalMongoConn);
-    global.mongoConn.on('error', updateGlobalMongoConn);
-    global.mongoConn.on('close', updateGlobalMongoConn);
-    global.mongoConn.on('connectionPoolClosed', updateGlobalMongoConn);
-    global.mongoConn.on('error', updateGlobalMongoConn);
-    global.mongoConn.on('serverClosed', updateGlobalMongoConn);
-    global.mongoConn.on('serverHeartbeatFailed', updateGlobalMongoConn);
-    global.mongoConn.on('timeout', updateGlobalMongoConn);
   };
 
-  if (!global.mongoConn) {
+  if (!global.mongoConn || !options.useCache) {
     await updateGlobalMongoConn();
   }
 
-  return global.mongoConn;
-};
+  // This should not be happened after updateGlobalMongoConn is called.
+  if (!global.mongoConn) {
+    throw new Error('global.mongoConn is not defined.');
+  }
 
-export const getDB = async () => {
-  return (await connectDB()).db(process.env.DB_NAME);
+  const db = global.mongoConn.db(process.env.DB_NAME);
+  await cb(db);
+
+  if (!options.useCache) {
+    if (global.mongoConn) {
+      global.mongoConn.close();
+    }
+    global.mongoConn = undefined;
+  }
 };
