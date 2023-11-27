@@ -26,10 +26,6 @@ const updateGlobalMongoConn = async () => {
   global.mongoConn.on('serverClosed', updateGlobalMongoConn);
 };
 
-export const connectDB = async () => {
-  return await createConnection();
-};
-
 export const executeDB = async <R extends unknown>(
   cb: (db: Db) => R | Promise<R>,
   options: {
