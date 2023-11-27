@@ -14,6 +14,18 @@ const createConnection = async () => {
   return await client.connect();
 };
 
+const updateGlobalMongoConn = async () => {
+  if (global.mongoConn) {
+    global.mongoConn.close();
+  }
+  global.mongoConn = await createConnection();
+  global.mongoConn.on('timeout', updateGlobalMongoConn);
+  global.mongoConn.on('error', updateGlobalMongoConn);
+  global.mongoConn.on('connectionCheckOutFailed', updateGlobalMongoConn);
+  global.mongoConn.on('connectionPoolClosed', updateGlobalMongoConn);
+  global.mongoConn.on('serverClosed', updateGlobalMongoConn);
+};
+
 export const connectDB = async () => {
   return await createConnection();
 };
@@ -26,29 +38,26 @@ export const executeDB = async (
     useCache: false,
   }
 ) => {
-  const updateGlobalMongoConn = async () => {
-    if (global.mongoConn) {
-      global.mongoConn.close();
+  let conn: MongoClient;
+  if (options.useCache) {
+    if (!global.mongoConn) {
+      await updateGlobalMongoConn();
     }
-    global.mongoConn = await createConnection();
-  };
 
-  if (!global.mongoConn || !options.useCache) {
-    await updateGlobalMongoConn();
+    // The error should not occur after updateGlobalMongoConn is called.
+    if (!global.mongoConn) {
+      throw new Error('global.mongoConn is not defined.');
+    }
+
+    conn = global.mongoConn;
+  } else {
+    conn = await createConnection();
   }
 
-  // This should not be happened after updateGlobalMongoConn is called.
-  if (!global.mongoConn) {
-    throw new Error('global.mongoConn is not defined.');
-  }
-
-  const db = global.mongoConn.db(process.env.DB_NAME);
+  const db = conn.db(process.env.DB_NAME);
   await cb(db);
 
   if (!options.useCache) {
-    if (global.mongoConn) {
-      global.mongoConn.close();
-    }
-    global.mongoConn = undefined;
+    conn.close();
   }
 };
