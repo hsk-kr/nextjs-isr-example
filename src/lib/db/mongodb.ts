@@ -18,15 +18,28 @@ export const connectDB = async () => {
     return await client.connect();
   };
 
-  // if (process.env.NODE_ENV === 'development') {
-  if (global.mongoConn) {
-    return global.mongoConn;
+  const updateGlobalMongoConn = async () => {
+    if (global.mongoConn) {
+      try {
+        await global.mongoConn.close();
+      } catch {}
+    }
+    global.mongoConn = await createConnection();
+    global.mongoConn.on('connectionCheckOutFailed', updateGlobalMongoConn);
+    global.mongoConn.on('error', updateGlobalMongoConn);
+    global.mongoConn.on('close', updateGlobalMongoConn);
+    global.mongoConn.on('connectionPoolClosed', updateGlobalMongoConn);
+    global.mongoConn.on('error', updateGlobalMongoConn);
+    global.mongoConn.on('serverClosed', updateGlobalMongoConn);
+    global.mongoConn.on('serverHeartbeatFailed', updateGlobalMongoConn);
+    global.mongoConn.on('timeout', updateGlobalMongoConn);
+  };
+
+  if (!global.mongoConn) {
+    await updateGlobalMongoConn();
   }
-  global.mongoConn = await createConnection();
+
   return global.mongoConn;
-  // } else {
-  //   return await createConnection();
-  // }
 };
 
 export const getDB = async () => {
