@@ -1,6 +1,8 @@
 'use client';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
+import colors from 'tailwindcss/colors';
+import { DefaultColors } from 'tailwindcss/types/generated/colors';
 
 const greetingsArray = [
   'Hi', // English
@@ -93,7 +95,7 @@ const greetingsArray = [
   'Salam', // Persian
 ];
 
-const fontSizes = [
+const fontSizeSet = [
   'text-sm',
   'text-base',
   'text-xl',
@@ -103,7 +105,7 @@ const fontSizes = [
   'text-5xl',
 ];
 
-const colors = [
+const colorSet = [
   'text-red-500',
   'text-orange-500',
   'text-rose-500',
@@ -122,21 +124,46 @@ const colors = [
   'text-pink-500',
 ];
 
+const dropTextFrame = [
+  {
+    top: '0%',
+    scale: '1',
+  },
+  {
+    top: '100%',
+    offset: 0.7,
+  },
+  {
+    top: '100%',
+    scale: '0',
+  },
+];
+
+const wiggleFrame = [
+  {
+    transform: 'rotate(-45deg)',
+  },
+  {
+    transform: 'rotate(45deg)',
+  },
+  {
+    transform: 'rotate(-45deg)',
+  },
+];
+
 export default function AnimationSection() {
   const greetingCanvas = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!greetingCanvas.current) return;
 
-    let tmId: NodeJS.Timeout;
-
     const addRandomGreeting = () => {
       const addGreeting = () => {
         if (!greetingCanvas.current) return;
         const elmt = document.createElement('div');
         const randFontSize =
-          fontSizes[Math.floor(Math.random() * fontSizes.length)];
-        const randColor = colors[Math.floor(Math.random() * colors.length)];
+          fontSizeSet[Math.floor(Math.random() * fontSizeSet.length)];
+        const randColor = colorSet[Math.floor(Math.random() * colorSet.length)];
         const randGreeting =
           greetingsArray[Math.floor(Math.random() * greetingsArray.length)];
         const randLeft =
@@ -146,59 +173,39 @@ export default function AnimationSection() {
 
         elmt.innerText = randGreeting;
         elmt.className = `absolute whitespace-nowrap ${randColor} ${randFontSize}`;
+        const splitColorName = randColor.split('-');
+        const colorRgb =
+          colors[splitColorName[1] as keyof DefaultColors][
+            splitColorName[2] as keyof DefaultColors[keyof DefaultColors]
+          ];
+        elmt.style.filter = `drop-shadow(4px 4px 4px ${colorRgb})`;
         elmt.style.left = randLeft;
         elmt.style.top = '0%';
 
+        const dropDuration = (2 + Math.floor(Math.random() * 5)) * 1000;
+        elmt.animate(dropTextFrame, {
+          duration: dropDuration,
+          iterations: 1,
+        });
+        elmt.animate(wiggleFrame, {
+          duration: 1000,
+          iterations: Infinity,
+        });
+
         greetingCanvas.current.appendChild(elmt);
+
+        setTimeout(() => {
+          elmt.remove();
+        }, dropDuration);
       };
 
-      const cnt = Math.floor(Math.random() * 3 + 1);
-      for (let i = 0; i <= cnt; i++) {
-        addGreeting();
-      }
-      startTimer();
+      addGreeting();
     };
 
-    const startTimer = () => {
-      tmId = setTimeout(
-        addRandomGreeting,
-        Math.floor(Math.random() * 1000) + 500
-      );
-    };
-
-    startTimer();
+    const tmId = setInterval(addRandomGreeting, 250);
 
     return () => {
       if (tmId) clearInterval(tmId);
-    };
-  }, []);
-
-  useEffect(() => {
-    const dropGreetings = () => {
-      if (!greetingCanvas.current) return;
-
-      greetingCanvas.current.querySelectorAll('div').forEach((greeting) => {
-        if (!greetingCanvas.current) return;
-
-        const nTop = Number(greeting.style.top.replace(/%/, '') || '0');
-        greeting.style.top = `${nTop + 1}%`;
-
-        const overTheLine =
-          greeting.clientHeight + greetingCanvas.current.clientHeight * 0.1 >=
-          greetingCanvas.current.clientHeight -
-            greeting.offsetTop +
-            greeting.clientHeight;
-
-        if (overTheLine) {
-          greeting.remove();
-        }
-      });
-    };
-
-    const tmId = setInterval(dropGreetings, 100);
-
-    return () => {
-      tmId;
     };
   }, []);
 
